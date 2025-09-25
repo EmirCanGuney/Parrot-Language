@@ -44,3 +44,10 @@ Parrot, kullanıcıların kişisel kelime listeleri oluşturup takip edebildiği
 - Modern tarayıcı (Chrome/Firefox/Edge)
 
 ---
+<img width="776" height="887" alt="Ekran görüntüsü 2025-09-25 145602" src="https://github.com/user-attachments/assets/07dd98e4-53e7-47be-b2fb-b4ff3217d8e8" />
+<img width="757" height="761" alt="Ekran görüntüsü 2025-09-25 145705" src="https://github.com/user-attachments/assets/3e13139d-50c3-4ed4-9773-84043d0851e0" />
+
+<img width="917" height="811" alt="Ekran görüntüsü 2025-09-25 145737" src="https://github.com/user-attachments/assets/f4bc4ed8-6a4c-4d3e-b5fe-bc42d03b497d" />
+<img width="731" height="887" alt="Ekran görüntüsü 2025-09-25 145802" src="https://github.com/user-attachments/assets/80598254-e43b-4bc1-959c-3677f593c53c" />
+
+
