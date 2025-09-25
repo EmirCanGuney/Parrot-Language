@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parrot Language - Modern Dictionary App</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <meta name="theme-color" content="#667eea">
+    <meta name="description" content="Modern dictionary app for learning English words with beautiful UI">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <div class="header-left">
+                    <div class="header-title">
+                        <img src="Parrot.png" alt="Parrot Language Logo" class="logo">
+                        <h1 id="colorful-title">PARROT <span class="language-text">language</span></h1>
+                    </div>
+                </div>
+                <div class="header-right">
+                    <div class="statistics">
+                        <div class="stat-item">
+                            <span class="stat-label">Total Words</span>
+                            <span id="totalWords" class="stat-value">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Today</span>
+                            <span id="todayWords" class="stat-value">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Last 7 Days</span>
+                            <span id="last7Days" class="stat-value">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Last Month</span>
+                            <span id="lastMonth" class="stat-value">0</span>
+                        </div>
+                    </div>
+                    <div class="user-account-section">
+                        <div class="user-info">
+                            <button id="editProfileButton" class="btn btn-primary">
+                                <i class="fas fa-user-edit"></i> Edit Profile
+                            </button>
+                            <button id="logoutButton" class="btn btn-secondary">
+                                <i class="fas fa-sign-out-alt"></i> Logout
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Kullanıcı Profil Düzenleme Modal -->
+        <div id="editProfileModal" class="modal">
+            <div class="modal-content">
+                <span class="close-modal">&times;</span>
+                <h2>Edit Profile</h2>
+                <div class="user-account-info">
+                    <div id="profileUserInfo" class="profile-user-info">
+                        <!-- Kullanıcı bilgileri buraya JavaScript ile eklenecek -->
+                    </div>
+                </div>
+                <form id="editProfileForm">
+                    <div class="form-group">
+                        <label for="editName">Name:</label>
+                        <input type="text" id="editName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editEmail">Email:</label>
+                        <input type="email" id="editEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editPassword">New Password (Optional):</label>
+                        <input type="password" id="editPassword">
+                    </div>
+                    <div class="form-group">
+                        <label for="confirmPassword">Confirm Password:</label>
+                        <input type="password" id="confirmPassword">
+                    </div>
+                    <div class="form-group">
+                        <label for="currentPassword">Current Password (Required for changes):</label>
+                        <input type="password" id="currentPassword" required>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" id="saveProfileBtn" class="btn btn-primary" disabled>Save</button>
+                        <button type="button" id="deleteAccountBtn" class="btn btn-danger" disabled>Delete Account</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="charts-section">
+            <div class="chart-toggle-container">
+                <button class="chart-toggle-btn" onclick="toggleChart('wordsTimeChart')">
+                    <i class="fas fa-chart-line"></i>
+                    Words by Date
+                    <i class="fas fa-chevron-down toggle-icon"></i>
+                </button>
+                <div class="chart-container" id="wordsTimeChartContainer" style="display: none;">
+                    <canvas id="wordsTimeChart"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-toggle-container">
+                <button class="chart-toggle-btn" onclick="toggleChart('difficultyPieChart')">
+                    <i class="fas fa-chart-pie"></i>
+                    Words by Difficulty
+                    <i class="fas fa-chevron-down toggle-icon"></i>
+                </button>
+                <div class="chart-container" id="difficultyPieChartContainer" style="display: none;">
+                    <canvas id="difficultyPieChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation Section at Top -->
+        <div class="navigation-section">
+            <h2><i class="fas fa-compass"></i> Navigation</h2>
+            <div class="navigation-buttons">
+                <button id="goToWordListButton" class="btn btn-primary navigation-btn">
+                    <i class="fas fa-book-open"></i> View All Words
+                </button>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="left-column">
+                <div class="add-word-section">
+                    <h2><i class="fas fa-plus-circle"></i> Add New Word</h2>
+                    <form id="addWordForm">
+                        <div class="form-group">
+                            <label for="english"><i class="fas fa-language"></i> English Word</label>
+                            <input type="text" id="english" name="english" placeholder="Enter an English word..." required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-magic"></i> Add Word
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Recently added word will be shown here -->
+                <div id="recentlyAddedSection" class="recently-added-section" style="display: none;">
+                    <h2><i class="fas fa-plus-circle"></i> Recently Added</h2>
+                    <div id="recentlyAddedWord" class="word-list">
+                        <!-- Recently added word will be shown here -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="right-column">
+                <div class="search-section">
+                    <h2><i class="fas fa-search"></i> Search Words</h2>
+                    <div class="search-container">
+                        <div class="form-group">
+                            <input type="text" id="searchInput" placeholder="Search for words...">
+                        </div>
+                        <div class="search-buttons">
+                            <button id="searchButton" class="btn btn-primary">
+                                <i class="fas fa-search"></i> Search
+                            </button>
+                            <button id="clearSearchButton" class="btn btn-secondary">
+                                <i class="fas fa-times"></i> Clear
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Search results will be shown here -->
+                <div id="searchResults" class="search-results" style="display: none;">
+                    <h3><i class="fas fa-search-plus"></i> Search Results</h3>
+                    <div id="searchWordList" class="word-list">
+                        <!-- Search results will be dynamically added here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Word Modal -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Edit Word</h2>
+            <form id="editWordForm">
+                <input type="hidden" id="editWordId">
+                <div class="form-group">
+                    <label for="editEnglish">English Word:</label>
+                    <input type="text" id="editEnglish" name="editEnglish" required>
+                </div>
+                <div class="form-group">
+                    <label for="editMeaning">Meaning:</label>
+                    <textarea id="editMeaning" name="editMeaning" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="editTurkishMeaning">Turkish Meaning:</label>
+                    <textarea id="editTurkishMeaning" name="editTurkishMeaning" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="editExampleUsage">Example Usage:</label>
+                    <textarea id="editExampleUsage" name="editExampleUsage"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="editDifficultyLevel">Difficulty Level:</label>
+                    <div class="difficulty-selector">
+                        <div class="difficulty-option">
+                            <input type="radio" id="noDifficulty" name="difficultyRadio" value="" class="difficulty-radio">
+                            <label for="noDifficulty" class="difficulty-label">None</label>
+                        </div>
+                        <div class="difficulty-option">
+                            <input type="radio" id="easyDifficulty" name="difficultyRadio" value="easy" class="difficulty-radio">
+                            <label for="easyDifficulty" class="difficulty-label easy-label">Easy</label>
+                        </div>
+                        <div class="difficulty-option">
+                            <input type="radio" id="mediumDifficulty" name="difficultyRadio" value="medium" class="difficulty-radio">
+                            <label for="mediumDifficulty" class="difficulty-label medium-label">Medium</label>
+                        </div>
+                        <div class="difficulty-option">
+                            <input type="radio" id="hardDifficulty" name="difficultyRadio" value="hard" class="difficulty-radio">
+                            <label for="hardDifficulty" class="difficulty-label hard-label">Hard</label>
+                        </div>
+                    </div>
+                    <select id="editDifficultyLevel" name="editDifficultyLevel" style="display: none;">
+                        <option value="">Select difficulty</option>
+                        <option value="easy">Easy</option>
+                        <option value="medium">Medium</option>
+                        <option value="hard">Hard</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Notification -->
+    <div id="notification" class="notification">
+        <span id="notificationMessage"></span>
+    </div>
+
+    <!-- Full Meaning Modal -->
+    <div id="fullMeaningModal" class="modal">
+        <div class="modal-content">
+            <span class="close-meaning">&times;</span>
+            <h2 id="fullMeaningTitle">Word Meanings</h2>
+            <div id="fullMeaningContent"></div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
